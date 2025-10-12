@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rick and Morty Explorer</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><i class="fas fa-portal"></i> Rick and Morty Explorer</h1>
+            <p class="subtitle">Explore o multiverso e descubra todos os personagens da série</p>
+        </div>
+    </header>
+
+    <main>
+        <!-- Filtros e Busca -->
+        <section class="controls">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Buscar personagem...">
+                <i class="fas fa-search"></i>
+            </div>
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="status-filter"><i class="fas fa-heartbeat"></i> Status:</label>
+                    <select id="status-filter">
+                        <option value="all">Todos</option>
+                        <option value="alive">Vivo</option>
+                        <option value="dead">Morto</option>
+                        <option value="unknown">Desconhecido</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="species-filter"><i class="fas fa-dna"></i> Espécie:</label>
+                    <select id="species-filter">
+                        <option value="all">Todas</option>
+                        <option value="human">Humano</option>
+                        <option value="alien">Alienígena</option>
+                        <option value="humanoid">Humanoide</option>
+                        <option value="robot">Robô</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="gender-filter"><i class="fas fa-venus-mars"></i> Gênero:</label>
+                    <select id="gender-filter">
+                        <option value="all">Todos</option>
+                        <option value="male">Masculino</option>
+                        <option value="female">Feminino</option>
+                        <option value="genderless">Sem gênero</option>
+                        <option value="unknown">Desconhecido</option>
+                    </select>
+                </div>
+                
+                <button id="apply-filters" class="btn-primary">
+                    <i class="fas fa-filter"></i> Aplicar
+                </button>
+                <button id="reset-filters" class="btn-secondary">
+                    <i class="fas fa-redo"></i> Limpar
+                </button>
+            </div>
+        </section>
+
+        <!-- Estatísticas -->
+        <section class="stats" id="stats">
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <span id="total-characters">0</span>
+                <p>Personagens</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-heart"></i>
+                <span id="alive-characters">0</span>
+                <p>Vivos</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-skull"></i>
+                <span id="dead-characters">0</span>
+                <p>Mortos</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-question"></i>
+                <span id="unknown-characters">0</span>
+                <p>Desconhecidos</p>
+            </div>
+        </section>
+
+        <!-- Grid de Personagens -->
+        <section class="characters-section">
+            <h2><i class="fas fa-list"></i> Personagens</h2>
+            <div class="characters-grid" id="characters-container">
+                <!-- Cards serão inseridos aqui -->
+            </div>
+        </section>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Viajando pelo multiverso...</p>
+        </div>
+
+        <!-- Paginação -->
+        <div class="pagination" id="pagination">
+            <button id="prev-page" class="pagination-btn">
+                <i class="fas fa-chevron-left"></i> Anterior
+            </button>
+            <span id="page-info">Página 1 de 1</span>
+            <button id="next-page" class="pagination-btn">
+                Próxima <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>Desenvolvido com a <i class="fas fa-heart"></i> usando a API de Rick and Morty</p>
+            <p class="api-info">Dados fornecidos por <a href="https://rickandmortyapi.com/" target="_blank">The Rick and Morty API</a></p>
+        </div>
+    </footer>
+
+    <!-- Modal para detalhes -->
+    <div id="character-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
