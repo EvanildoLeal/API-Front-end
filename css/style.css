@@ -322,6 +322,209 @@ select:hover, input:hover, button:hover {
     transform: none;
 }
 
+/* === SEÇÕES PARALLAX MELHORADAS === */
+.parallax-section {
+    width: 100vw;
+    min-height: 100vh;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    text-align: center;
+}
+
+.parallax-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* MAIS CLARO - de 0.85 para 0.5 */
+    background: rgba(10, 14, 23, 0.5);
+    z-index: 1;
+}
+
+.parallax-section > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Hero Section Melhorada */
+#hero {
+    background-image: url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+    color: white;
+    padding: 2rem;
+}
+
+.hero-content h1 {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    color: #1ed760;
+    font-weight: bold;
+    /* SOMBRAS MELHORADAS */
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.9), 
+                 0 0 25px rgba(30, 215, 96, 0.8);
+}
+
+.hero-content p {
+    font-size: 1.5rem;
+    margin-bottom: 3rem;
+    color: #ffffff; /* MAIS BRANCO */
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+    text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.8);
+    font-weight: 500;
+}
+
+.cta-button {
+    padding: 1.2rem 2.5rem;
+    font-size: 1.3rem;
+    background: linear-gradient(135deg, #1ed760, #17b850);
+    color: #0a0e17;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    box-shadow: 0 5px 20px rgba(30, 215, 96, 0.4);
+    border: 2px solid transparent;
+}
+
+.cta-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(30, 215, 96, 0.6);
+    background: linear-gradient(135deg, #17b850, #1ed760);
+    border-color: #ffffff;
+}
+
+.cta-button i {
+    margin-right: 0.5rem;
+}
+
+/* Multiverse Section */
+#multiverse {
+    background-image: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+    color: white;
+    padding: 4rem 2rem;
+}
+
+.multiverse-content {
+    max-width: 1000px;
+}
+
+.multiverse-content h2 {
+    color: #1ed760;
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 15px rgba(30, 215, 96, 0.5);
+}
+
+.multiverse-content h2 i {
+    margin-right: 1rem;
+}
+
+.multiverse-content p {
+    font-size: 1.3rem;
+    line-height: 1.8;
+    color: #e0e0e0;
+    margin-bottom: 3rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.multiverse-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.multiverse-stat {
+    background: rgba(26, 60, 64, 0.7);
+    padding: 2rem;
+    border-radius: 15px;
+    border: 2px solid #2a5c60;
+    transition: transform 0.3s ease;
+}
+
+.multiverse-stat:hover {
+    transform: translateY(-10px);
+    border-color: #1ed760;
+}
+
+.multiverse-stat i {
+    font-size: 3rem;
+    color: #1ed760;
+    margin-bottom: 1rem;
+}
+
+.multiverse-stat span {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #1ed760;
+    margin-bottom: 0.5rem;
+}
+
+.multiverse-stat p {
+    font-size: 1.1rem;
+    color: #a0a0a0;
+    margin: 0;
+}
+
+/* Rolagem suave */
+html {
+    scroll-behavior: smooth;
+}
+
+.characters-section {
+    scroll-margin-top: 20px;
+}
+
+/* Ajuste do header original */
+header {
+    background: linear-gradient(135deg, #1a3c40 0%, #0a0e17 100%);
+    padding: 2rem 1rem;
+    text-align: center;
+    border-bottom: 3px solid #1ed760;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .hero-content p {
+        font-size: 1.2rem;
+    }
+    
+    .multiverse-content h2 {
+        font-size: 2rem;
+    }
+    
+    .multiverse-content p {
+        font-size: 1.1rem;
+    }
+    
+    .multiverse-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .parallax-section {
+        background-attachment: scroll; /* Desativa parallax em mobile */
+    }
+}
+
 /* Modal */
 .modal {
     display: none;

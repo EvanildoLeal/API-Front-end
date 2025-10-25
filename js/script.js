@@ -1,4 +1,4 @@
-// script.js
+// script.js - VERSÃO COMPLETA E CORRIGIDA
 class RickAndMortyAPI {
     constructor() {
         this.baseURL = 'https://rickandmortyapi.com/api';
@@ -12,63 +12,110 @@ class RickAndMortyAPI {
         };
         this.allCharacters = [];
         
-        this.initializeElements();
-        this.setupEventListeners();
-        this.loadCharacters();
+        // Aguarda o DOM estar totalmente pronto
+        setTimeout(() => {
+            this.initializeElements();
+            this.setupEventListeners();
+            this.loadCharacters();
+        }, 100);
     }
 
     initializeElements() {
-        // Elementos DOM
-        this.elements = {
-            charactersContainer: document.getElementById('characters-container'),
-            loadingElement: document.getElementById('loading'),
-            paginationElement: document.getElementById('pagination'),
-            prevPageButton: document.getElementById('prev-page'),
-            nextPageButton: document.getElementById('next-page'),
-            pageInfoElement: document.getElementById('page-info'),
-            statusFilter: document.getElementById('status-filter'),
-            speciesFilter: document.getElementById('species-filter'),
-            genderFilter: document.getElementById('gender-filter'),
-            searchInput: document.getElementById('search-input'),
-            applyFiltersButton: document.getElementById('apply-filters'),
-            resetFiltersButton: document.getElementById('reset-filters'),
-            modal: document.getElementById('character-modal'),
-            modalBody: document.getElementById('modal-body'),
-            closeModal: document.querySelector('.close-modal'),
-            stats: {
-                total: document.getElementById('total-characters'),
-                alive: document.getElementById('alive-characters'),
-                dead: document.getElementById('dead-characters'),
-                unknown: document.getElementById('unknown-characters')
-            }
-        };
+        try {
+            this.elements = {
+                charactersContainer: document.getElementById('characters-container'),
+                loadingElement: document.getElementById('loading'),
+                paginationElement: document.getElementById('pagination'),
+                prevPageButton: document.getElementById('prev-page'),
+                nextPageButton: document.getElementById('next-page'),
+                pageInfoElement: document.getElementById('page-info'),
+                statusFilter: document.getElementById('status-filter'),
+                speciesFilter: document.getElementById('species-filter'),
+                genderFilter: document.getElementById('gender-filter'),
+                searchInput: document.getElementById('search-input'),
+                applyFiltersButton: document.getElementById('apply-filters'),
+                resetFiltersButton: document.getElementById('reset-filters'),
+                modal: document.getElementById('character-modal'),
+                modalBody: document.getElementById('modal-body'),
+                closeModal: document.querySelector('.close-modal'),
+                stats: {
+                    total: document.getElementById('total-characters'),
+                    alive: document.getElementById('alive-characters'),
+                    dead: document.getElementById('dead-characters'),
+                    unknown: document.getElementById('unknown-characters')
+                }
+            };
+            
+            console.log('✅ Elementos inicializados com sucesso');
+            
+            // Debug: mostrar quais elementos foram encontrados
+            Object.entries(this.elements).forEach(([key, element]) => {
+                if (element) {
+                    console.log(`✅ ${key}: OK`);
+                } else {
+                    console.warn(`⚠️ ${key}: Não encontrado`);
+                }
+            });
+            
+        } catch (error) {
+            console.error('❌ Erro ao inicializar elementos:', error);
+        }
     }
 
     setupEventListeners() {
         // Filtros
-        this.elements.applyFiltersButton.addEventListener('click', () => this.applyFilters());
-        this.elements.resetFiltersButton.addEventListener('click', () => this.resetFilters());
+        if (this.elements.applyFiltersButton) {
+            this.elements.applyFiltersButton.addEventListener('click', () => this.applyFilters());
+        } else {
+            console.warn('⚠️ applyFiltersButton não encontrado');
+        }
+        
+        if (this.elements.resetFiltersButton) {
+            this.elements.resetFiltersButton.addEventListener('click', () => this.resetFilters());
+        } else {
+            console.warn('⚠️ resetFiltersButton não encontrado');
+        }
         
         // Busca em tempo real
-        this.elements.searchInput.addEventListener('input', (e) => {
-            this.currentFilters.name = e.target.value;
-            this.debounce(() => this.applyFilters(), 500);
-        });
+        if (this.elements.searchInput) {
+            this.elements.searchInput.addEventListener('input', (e) => {
+                this.currentFilters.name = e.target.value;
+                this.debounce(() => this.applyFilters(), 500);
+            });
+        } else {
+            console.warn('⚠️ searchInput não encontrado');
+        }
 
         // Paginação
-        this.elements.prevPageButton.addEventListener('click', () => this.changePage(this.currentPage - 1));
-        this.elements.nextPageButton.addEventListener('click', () => this.changePage(this.currentPage + 1));
+        if (this.elements.prevPageButton) {
+            this.elements.prevPageButton.addEventListener('click', () => this.changePage(this.currentPage - 1));
+        } else {
+            console.warn('⚠️ prevPageButton não encontrado');
+        }
+        
+        if (this.elements.nextPageButton) {
+            this.elements.nextPageButton.addEventListener('click', () => this.changePage(this.currentPage + 1));
+        } else {
+            console.warn('⚠️ nextPageButton não encontrado');
+        }
 
         // Modal
-        this.elements.closeModal.addEventListener('click', () => this.closeModal());
-        this.elements.modal.addEventListener('click', (e) => {
-            if (e.target === this.elements.modal) this.closeModal();
-        });
+        if (this.elements.closeModal) {
+            this.elements.closeModal.addEventListener('click', () => this.closeModal());
+        }
+        
+        if (this.elements.modal) {
+            this.elements.modal.addEventListener('click', (e) => {
+                if (e.target === this.elements.modal) this.closeModal();
+            });
+        }
 
         // Teclado
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') this.closeModal();
         });
+        
+        console.log('✅ Event listeners configurados');
     }
 
     async loadCharacters() {
@@ -80,7 +127,7 @@ class RickAndMortyAPI {
             
             this.allCharacters = data.results;
             this.totalPages = data.info.pages;
-            this.updateStatistics();
+            this.updateStatistics(this.allCharacters);
             this.displayCharacters(this.allCharacters);
             
         } catch (error) {
@@ -126,6 +173,11 @@ class RickAndMortyAPI {
     }
 
     displayCharacters(characters) {
+        if (!this.elements.charactersContainer) {
+            console.error('❌ charactersContainer não encontrado');
+            return;
+        }
+        
         this.elements.charactersContainer.innerHTML = '';
         
         if (!characters || characters.length === 0) {
@@ -180,6 +232,11 @@ class RickAndMortyAPI {
     }
 
     showCharacterDetails(character) {
+        if (!this.elements.modalBody || !this.elements.modal) {
+            console.warn('❌ Modal não disponível');
+            return;
+        }
+        
         const statusClass = `status-${character.status.toLowerCase()}`;
         
         this.elements.modalBody.innerHTML = `
@@ -217,15 +274,17 @@ class RickAndMortyAPI {
     }
 
     closeModal() {
-        this.elements.modal.style.display = 'none';
+        if (this.elements.modal) {
+            this.elements.modal.style.display = 'none';
+        }
     }
 
     applyFilters() {
         this.currentFilters = {
-            name: this.elements.searchInput.value,
-            status: this.elements.statusFilter.value,
-            species: this.elements.speciesFilter.value,
-            gender: this.elements.genderFilter.value
+            name: this.elements.searchInput ? this.elements.searchInput.value : '',
+            status: this.elements.statusFilter ? this.elements.statusFilter.value : 'all',
+            species: this.elements.speciesFilter ? this.elements.speciesFilter.value : 'all',
+            gender: this.elements.genderFilter ? this.elements.genderFilter.value : 'all'
         };
         
         this.currentPage = 1;
@@ -233,10 +292,10 @@ class RickAndMortyAPI {
     }
 
     resetFilters() {
-        this.elements.searchInput.value = '';
-        this.elements.statusFilter.value = 'all';
-        this.elements.speciesFilter.value = 'all';
-        this.elements.genderFilter.value = 'all';
+        if (this.elements.searchInput) this.elements.searchInput.value = '';
+        if (this.elements.statusFilter) this.elements.statusFilter.value = 'all';
+        if (this.elements.speciesFilter) this.elements.speciesFilter.value = 'all';
+        if (this.elements.genderFilter) this.elements.genderFilter.value = 'all';
         
         this.currentFilters = {
             name: '',
@@ -250,21 +309,44 @@ class RickAndMortyAPI {
     }
 
     changePage(page) {
-        if (page < 1 || page > this.totalPages) return;
-        this.fetchCharacters(page);
-    }
+    if (page < 1 || page > this.totalPages) return;
+    
+    // Salva a posição atual de rolagem
+    const scrollPosition = window.scrollY;
+    const charactersSection = document.querySelector('.characters-section');
+    
+    this.fetchCharacters(page).then(() => {
+        // Restaura a posição de rolagem após carregar
+        setTimeout(() => {
+            if (charactersSection) {
+                charactersSection.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            } else {
+                window.scrollTo(0, scrollPosition);
+            }
+        }, 100);
+    });
+}
 
     updatePagination() {
+        if (!this.elements.pageInfoElement || !this.elements.prevPageButton || !this.elements.nextPageButton) {
+            return;
+        }
+        
         this.elements.pageInfoElement.textContent = `Página ${this.currentPage} de ${this.totalPages}`;
         
         this.elements.prevPageButton.disabled = this.currentPage === 1;
         this.elements.nextPageButton.disabled = this.currentPage === this.totalPages;
         
-        this.elements.paginationElement.style.display = this.totalPages <= 1 ? 'none' : 'flex';
+        if (this.elements.paginationElement) {
+            this.elements.paginationElement.style.display = this.totalPages <= 1 ? 'none' : 'flex';
+        }
     }
 
     updateStatistics(characters = null) {
-        if (!characters) return;
+        if (!characters || !this.elements.stats.total) return;
         
         const stats = {
             total: characters.length,
@@ -280,18 +362,32 @@ class RickAndMortyAPI {
     }
 
     showLoading() {
-        this.elements.loadingElement.style.display = 'flex';
-        this.elements.charactersContainer.style.display = 'none';
-        this.elements.paginationElement.style.display = 'none';
+        if (this.elements.loadingElement) {
+            this.elements.loadingElement.style.display = 'flex';
+        }
+        if (this.elements.charactersContainer) {
+            this.elements.charactersContainer.style.display = 'none';
+        }
+        if (this.elements.paginationElement) {
+            this.elements.paginationElement.style.display = 'none';
+        }
     }
 
     hideLoading() {
-        this.elements.loadingElement.style.display = 'none';
-        this.elements.charactersContainer.style.display = 'grid';
-        this.elements.paginationElement.style.display = this.totalPages > 1 ? 'flex' : 'none';
+        if (this.elements.loadingElement) {
+            this.elements.loadingElement.style.display = 'none';
+        }
+        if (this.elements.charactersContainer) {
+            this.elements.charactersContainer.style.display = 'grid';
+        }
+        if (this.elements.paginationElement && this.totalPages > 1) {
+            this.elements.paginationElement.style.display = 'flex';
+        }
     }
 
     showError(message) {
+        if (!this.elements.charactersContainer) return;
+        
         this.elements.charactersContainer.innerHTML = `
             <div class="error-message" style="grid-column: 1/-1; text-align: center; padding: 2rem;">
                 <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--danger-color); margin-bottom: 1rem;"></i>
@@ -310,7 +406,8 @@ class RickAndMortyAPI {
     }
 }
 
-// Inicializar a aplicação quando o DOM estiver carregado
-document.addEventListener('DOMContentLoaded', () => {
+// Inicialização segura
+window.addEventListener('load', () => {
+    console.log('🚀 Iniciando Rick and Morty API...');
     new RickAndMortyAPI();
 });

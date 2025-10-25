@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rick and Morty Explorer</title>
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- HEADER ORIGINAL -->
     <header>
         <div class="header-content">
             <h1><i class="fas fa-portal"></i> Rick and Morty Explorer</h1>
@@ -15,8 +16,19 @@
         </div>
     </header>
 
+    <!-- NOVA SEÇÃO HERO PARALLAX -->
+    <section id="hero" class="parallax-section">
+        <div class="hero-content">
+            <h1>Viaje pelo Multiverso</h1>
+            <p>Descubra dimensões alternativas e todos os personagens de Rick and Morty</p>
+            <button class="cta-button" onclick="scrollToContent()">
+                <i class="fas fa-rocket"></i> Começar Exploração
+            </button>
+        </div>
+    </section>
+
     <main>
-        <!-- Filtros e Busca -->
+        <!-- FILTROS E BUSCA -->
         <section class="controls">
             <div class="search-box">
                 <input type="text" id="search-input" placeholder="Buscar personagem...">
@@ -65,7 +77,7 @@
             </div>
         </section>
 
-        <!-- Estatísticas -->
+        <!-- ESTATÍSTICAS -->
         <section class="stats" id="stats">
             <div class="stat-card">
                 <i class="fas fa-users"></i>
@@ -89,21 +101,21 @@
             </div>
         </section>
 
-        <!-- Grid de Personagens -->
+        <!-- GRID DE PERSONAGENS -->
         <section class="characters-section">
-            <h2><i class="fas fa-list"></i> Personagens</h2>
+            <h2><i class="fas fa-users"></i> Personagens</h2>
             <div class="characters-grid" id="characters-container">
-                <!-- Cards serão inseridos aqui -->
+                <!-- Cards serão inseridos aqui pelo JavaScript -->
             </div>
         </section>
 
-        <!-- Loading -->
+        <!-- LOADING -->
         <div class="loading" id="loading">
             <div class="spinner"></div>
             <p>Viajando pelo multiverso...</p>
         </div>
 
-        <!-- Paginação -->
+        <!-- PAGINAÇÃO -->
         <div class="pagination" id="pagination">
             <button id="prev-page" class="pagination-btn">
                 <i class="fas fa-chevron-left"></i> Anterior
@@ -114,6 +126,31 @@
             </button>
         </div>
     </main>
+
+    <!-- NOVA SEÇÃO MULTIVERSE PARALLAX -->
+    <section id="multiverse" class="parallax-section">
+        <div class="multiverse-content">
+            <h2><i class="fas fa-globe-americas"></i> O Multiverso Infinito</h2>
+            <p>Rick and Morty explora o conceito de infinitas realidades paralelas, onde cada decisão cria um novo universo. Navegue por essas dimensões e descubra personagens únicos em cada realidade!</p>
+            <div class="multiverse-stats">
+                <div class="multiverse-stat">
+                    <i class="fas fa-infinity"></i>
+                    <span>Infinitas</span>
+                    <p>Dimensões</p>
+                </div>
+                <div class="multiverse-stat">
+                    <i class="fas fa-users"></i>
+                    <span>800+</span>
+                    <p>Personagens</p>
+                </div>
+                <div class="multiverse-stat">
+                    <i class="fas fa-tv"></i>
+                    <span>6+</span>
+                    <p>Temporadas</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <footer>
         <div class="footer-content">
@@ -131,5 +168,23 @@
     </div>
 
     <script src="js/script.js"></script>
+    <script>
+        // Função para rolagem suave
+        function scrollToContent() {
+            document.querySelector('main').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+        
+        // Rolagem suave para todas as âncoras
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 </body>
 </html>
