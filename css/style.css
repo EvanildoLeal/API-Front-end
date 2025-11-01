@@ -6,7 +6,7 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* DESIGN SYSTEM COM VARIÁVEIS */
+/* DESIGN SYSTEM COM VARIÁVEIS <!-- ⭐ --> */
 :root {
     --primary-color: #1ed760;             /* Verde Rick and Morty */
     --secondary-color: #1a3c40;         /* Azul escuro */
@@ -194,7 +194,7 @@ select:hover, input:hover, button:hover {
     margin-right: 0.5rem;
 }
 
-/* GRID RESPONSIVO */
+/* GRID RESPONSIVO <!-- ⭐ --> */
 .characters-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
