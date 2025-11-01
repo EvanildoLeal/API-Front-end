@@ -6,10 +6,11 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* DESIGN SYSTEM COM VARIÁVEIS */
 :root {
-    --primary-color: #1ed760;
-    --secondary-color: #1a3c40;
-    --background-color: #0a0e17;
+    --primary-color: #1ed760;             /* Verde Rick and Morty */
+    --secondary-color: #1a3c40;         /* Azul escuro */
+    --background-color: #0a0e17;      /* Fundo espacial */
     --card-bg: #1a3c40;
     --text-color: #e0e0e0;
     --accent-color: #2a5c60;
@@ -193,6 +194,7 @@ select:hover, input:hover, button:hover {
     margin-right: 0.5rem;
 }
 
+/* GRID RESPONSIVO */
 .characters-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

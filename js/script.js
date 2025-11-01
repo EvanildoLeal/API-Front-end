@@ -1,4 +1,4 @@
-// script.js - VERSÃO COMPLETA E CORRIGIDA
+// script.js - GERENCIA TODA APLICAÇÃO
 class RickAndMortyAPI {
     constructor() {
         this.baseURL = 'https://rickandmortyapi.com/api';
@@ -12,7 +12,7 @@ class RickAndMortyAPI {
         };
         this.allCharacters = [];
         
-        // Aguarda o DOM estar totalmente pronto
+        // Inicializa após DOM carregado
         setTimeout(() => {
             this.initializeElements();
             this.setupEventListeners();
@@ -138,13 +138,14 @@ class RickAndMortyAPI {
         }
     }
 
+    // CONSUMO DA API COM FETCH
     async fetchCharacters(page = 1) {
         this.showLoading();
         
         try {
             let apiUrl = `${this.baseURL}/character/?page=${page}`;
             
-            // Adicionar filtros
+            // Adicionar filtros à URL
             const filters = Object.entries(this.currentFilters)
                 .filter(([key, value]) => value && value !== 'all')
                 .map(([key, value]) => `${key}=${value}`)
@@ -172,6 +173,7 @@ class RickAndMortyAPI {
         }
     }
 
+    // Método que cria os cards dinamicamente 
     displayCharacters(characters) {
         if (!this.elements.charactersContainer) {
             console.error('❌ charactersContainer não encontrado');
