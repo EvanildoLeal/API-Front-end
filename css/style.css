@@ -322,7 +322,7 @@ select:hover, input:hover, button:hover {
     transform: none;
 }
 
-/* === SEÇÕES PARALLAX MELHORADAS === */
+/* === SEÇÕES PARALLAX  === */
 .parallax-section {
     width: 100vw;
     min-height: 100vh;

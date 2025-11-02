@@ -1,4 +1,4 @@
-// script.js - VERSÃO COMPLETA E CORRIGIDA
+// script.js 
 class RickAndMortyAPI {
     constructor() {
         this.baseURL = 'https://rickandmortyapi.com/api';
@@ -12,7 +12,7 @@ class RickAndMortyAPI {
         };
         this.allCharacters = [];
         
-        // Aguarda o DOM estar totalmente pronto
+        // Aguarda o DOM está totalmente pronto
         setTimeout(() => {
             this.initializeElements();
             this.setupEventListeners();
@@ -290,7 +290,7 @@ class RickAndMortyAPI {
         this.fetchCharacters(this.currentPage);
     }
 
-    // ✅ MÉTODO CORRIGIDO - changePage
+    // changePage
     async changePage(page) {
         if (page < 1 || page > this.totalPages) return;
         
