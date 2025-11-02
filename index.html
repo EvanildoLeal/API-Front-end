@@ -28,16 +28,18 @@
     </section>
 
     <main>
-        <!-- FILTROS E BUSCA -->
+        <!-- ESTRUTURA SEMÂNTICA -->
         <section class="controls">
+            <!-- SISTEMA DE FILTROS -->
             <div class="search-box">
                 <input type="text" id="search-input" placeholder="Buscar personagem...">
                 <i class="fas fa-search"></i>
             </div>
             
             <div class="filters">
-                <div class="filter-group">
+                <div class="filter-group">1
                     <label for="status-filter"><i class="fas fa-heartbeat"></i> Status:</label>
+                    <!-- FILTROS DINÂMICOS -->
                     <select id="status-filter">
                         <option value="all">Todos</option>
                         <option value="alive">Vivo</option>
@@ -104,6 +106,7 @@
         <!-- GRID DE PERSONAGENS -->
         <section class="characters-section">
             <h2><i class="fas fa-users"></i> Personagens</h2>
+            <!-- GRID DINÂMICO -->
             <div class="characters-grid" id="characters-container">
                 <!-- Cards serão inseridos aqui pelo JavaScript -->
             </div>

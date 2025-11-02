@@ -1,4 +1,4 @@
-// script.js 
+// script.js "A classe principal gerencia toda a aplicação..."
 class RickAndMortyAPI {
     constructor() {
         this.baseURL = 'https://rickandmortyapi.com/api';
@@ -12,7 +12,7 @@ class RickAndMortyAPI {
         };
         this.allCharacters = [];
         
-        // Aguarda o DOM está totalmente pronto
+         // Inicialização após DOM carregado
         setTimeout(() => {
             this.initializeElements();
             this.setupEventListeners();
@@ -120,13 +120,14 @@ class RickAndMortyAPI {
         }
     }
 
+        // CONSUMO DA API COM FETCH
     async fetchCharacters(page = 1) {
         this.showLoading();
         
         try {
             let apiUrl = `${this.baseURL}/character/?page=${page}`;
             
-            // Adicionar filtros
+               // Adiciona filtros à URL
             const filters = Object.entries(this.currentFilters)
                 .filter(([key, value]) => value && value !== 'all')
                 .map(([key, value]) => `${key}=${value}`)
@@ -154,6 +155,7 @@ class RickAndMortyAPI {
         }
     }
 
+    // MÉTODO QUE CRIA OS CARDS DINAMICAMENTE
     displayCharacters(characters) {
         if (!this.elements.charactersContainer) {
             console.error('❌ charactersContainer não encontrado');
