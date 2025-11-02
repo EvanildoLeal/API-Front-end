@@ -48,15 +48,6 @@ class RickAndMortyAPI {
             
             console.log('✅ Elementos inicializados com sucesso');
             
-            // Debug: mostrar quais elementos foram encontrados
-            Object.entries(this.elements).forEach(([key, element]) => {
-                if (element) {
-                    console.log(`✅ ${key}: OK`);
-                } else {
-                    console.warn(`⚠️ ${key}: Não encontrado`);
-                }
-            });
-            
         } catch (error) {
             console.error('❌ Erro ao inicializar elementos:', error);
         }
@@ -66,14 +57,10 @@ class RickAndMortyAPI {
         // Filtros
         if (this.elements.applyFiltersButton) {
             this.elements.applyFiltersButton.addEventListener('click', () => this.applyFilters());
-        } else {
-            console.warn('⚠️ applyFiltersButton não encontrado');
         }
         
         if (this.elements.resetFiltersButton) {
             this.elements.resetFiltersButton.addEventListener('click', () => this.resetFilters());
-        } else {
-            console.warn('⚠️ resetFiltersButton não encontrado');
         }
         
         // Busca em tempo real
@@ -82,21 +69,15 @@ class RickAndMortyAPI {
                 this.currentFilters.name = e.target.value;
                 this.debounce(() => this.applyFilters(), 500);
             });
-        } else {
-            console.warn('⚠️ searchInput não encontrado');
         }
 
         // Paginação
         if (this.elements.prevPageButton) {
             this.elements.prevPageButton.addEventListener('click', () => this.changePage(this.currentPage - 1));
-        } else {
-            console.warn('⚠️ prevPageButton não encontrado');
         }
         
         if (this.elements.nextPageButton) {
             this.elements.nextPageButton.addEventListener('click', () => this.changePage(this.currentPage + 1));
-        } else {
-            console.warn('⚠️ nextPageButton não encontrado');
         }
 
         // Modal
@@ -129,6 +110,7 @@ class RickAndMortyAPI {
             this.totalPages = data.info.pages;
             this.updateStatistics(this.allCharacters);
             this.displayCharacters(this.allCharacters);
+            this.updatePagination();
             
         } catch (error) {
             console.error('Erro ao carregar personagens:', error);
@@ -308,14 +290,17 @@ class RickAndMortyAPI {
         this.fetchCharacters(this.currentPage);
     }
 
-    changePage(page) {
-    if (page < 1 || page > this.totalPages) return;
-    
-    // Salva a posição atual de rolagem
-    const scrollPosition = window.scrollY;
-    const charactersSection = document.querySelector('.characters-section');
-    
-    this.fetchCharacters(page).then(() => {
+    // ✅ MÉTODO CORRIGIDO - changePage
+    async changePage(page) {
+        if (page < 1 || page > this.totalPages) return;
+        
+        // Salva a posição atual de rolagem
+        const scrollPosition = window.scrollY;
+        const charactersSection = document.querySelector('.characters-section');
+        
+        // Chama fetchCharacters e espera completar
+        await this.fetchCharacters(page);
+        
         // Restaura a posição de rolagem após carregar
         setTimeout(() => {
             if (charactersSection) {
@@ -327,8 +312,7 @@ class RickAndMortyAPI {
                 window.scrollTo(0, scrollPosition);
             }
         }, 100);
-    });
-}
+    }
 
     updatePagination() {
         if (!this.elements.pageInfoElement || !this.elements.prevPageButton || !this.elements.nextPageButton) {
