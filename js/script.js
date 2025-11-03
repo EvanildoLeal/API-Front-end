@@ -1,4 +1,4 @@
-// script.js "A classe principal gerencia toda a aplicação..."
+// script.js - 
 class RickAndMortyAPI {
     constructor() {
         this.baseURL = 'https://rickandmortyapi.com/api';
@@ -11,13 +11,21 @@ class RickAndMortyAPI {
             gender: 'all'
         };
         this.allCharacters = [];
+        this.elements = {};
         
-         // Inicialização após DOM carregado
-        setTimeout(() => {
-            this.initializeElements();
-            this.setupEventListeners();
-            this.loadCharacters();
-        }, 100);
+        // Inicialização segura após DOM carregar
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.init());
+        } else {
+            this.init();
+        }
+    }
+
+    init() {
+        console.log('🚀 Inicializando Rick and Morty Explorer...');
+        this.initializeElements();
+        this.setupEventListeners();
+        this.fetchCharacters(1); // Carrega primeira página
     }
 
     initializeElements() {
@@ -46,7 +54,7 @@ class RickAndMortyAPI {
                 }
             };
             
-            console.log('✅ Elementos inicializados com sucesso');
+            console.log('✅ Elementos inicializados:', this.elements);
             
         } catch (error) {
             console.error('❌ Erro ao inicializar elementos:', error);
@@ -68,6 +76,13 @@ class RickAndMortyAPI {
             this.elements.searchInput.addEventListener('input', (e) => {
                 this.currentFilters.name = e.target.value;
                 this.debounce(() => this.applyFilters(), 500);
+            });
+        }
+
+        // Filtros com enter
+        if (this.elements.searchInput) {
+            this.elements.searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') this.applyFilters();
             });
         }
 
@@ -99,57 +114,62 @@ class RickAndMortyAPI {
         console.log('✅ Event listeners configurados');
     }
 
-    async loadCharacters() {
-        this.showLoading();
-        
-        try {
-            const response = await fetch(`${this.baseURL}/character`);
-            const data = await response.json();
-            
-            this.allCharacters = data.results;
-            this.totalPages = data.info.pages;
-            this.updateStatistics(this.allCharacters);
-            this.displayCharacters(this.allCharacters);
-            this.updatePagination();
-            
-        } catch (error) {
-            console.error('Erro ao carregar personagens:', error);
-            this.showError('Erro ao carregar personagens. Tente novamente mais tarde.');
-        } finally {
-            this.hideLoading();
-        }
-    }
-
-        // CONSUMO DA API COM FETCH
+    // CONSUMO DA API COM FETCH - 
     async fetchCharacters(page = 1) {
         this.showLoading();
         
         try {
             let apiUrl = `${this.baseURL}/character/?page=${page}`;
             
-               // Adiciona filtros à URL
-            const filters = Object.entries(this.currentFilters)
-                .filter(([key, value]) => value && value !== 'all')
-                .map(([key, value]) => `${key}=${value}`)
-                .join('&');
+            // Adiciona filtros à URL
+            const filters = [];
             
-            if (filters) apiUrl += `&${filters}`;
+            if (this.currentFilters.name && this.currentFilters.name.trim() !== '') {
+                filters.push(`name=${encodeURIComponent(this.currentFilters.name.trim())}`);
+            }
+            if (this.currentFilters.status && this.currentFilters.status !== 'all') {
+                filters.push(`status=${this.currentFilters.status}`);
+            }
+            if (this.currentFilters.species && this.currentFilters.species !== 'all') {
+                filters.push(`species=${this.currentFilters.species}`);
+            }
+            if (this.currentFilters.gender && this.currentFilters.gender !== 'all') {
+                filters.push(`gender=${this.currentFilters.gender}`);
+            }
+            
+            if (filters.length > 0) {
+                apiUrl += `&${filters.join('&')}`;
+            }
+            
+            console.log('🌐 Buscando:', apiUrl);
             
             const response = await fetch(apiUrl);
             
-            if (!response.ok) throw new Error('Erro ao buscar dados da API');
+            if (!response.ok) {
+                if (response.status === 404) {
+                    // Nenhum resultado encontrado
+                    this.displayCharacters([]);
+                    this.updatePagination();
+                    this.updateStatistics([]);
+                    return;
+                }
+                throw new Error(`Erro HTTP: ${response.status}`);
+            }
             
             const data = await response.json();
             
             this.currentPage = page;
             this.totalPages = data.info.pages;
+            this.allCharacters = data.results;
+            
             this.updatePagination();
             this.updateStatistics(data.results);
             this.displayCharacters(data.results);
             
         } catch (error) {
-            console.error('Erro:', error);
+            console.error('❌ Erro ao buscar personagens:', error);
             this.showError('Erro ao carregar personagens. Tente novamente mais tarde.');
+            this.displayCharacters([]);
         } finally {
             this.hideLoading();
         }
@@ -168,7 +188,8 @@ class RickAndMortyAPI {
             this.elements.charactersContainer.innerHTML = `
                 <div class="no-results" style="grid-column: 1/-1; text-align: center; padding: 2rem;">
                     <i class="fas fa-search" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
-                    <p style="font-size: 1.2rem;">Nenhum personagem encontrado com os filtros selecionados.</p>
+                    <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Nenhum personagem encontrado</h3>
+                    <p style="font-size: 1.1rem; color: var(--text-color);">Tente ajustar os filtros ou termos de busca.</p>
                 </div>
             `;
             return;
@@ -188,7 +209,7 @@ class RickAndMortyAPI {
         const statusClass = `status-${character.status.toLowerCase()}`;
         
         card.innerHTML = `
-            <img src="${character.image}" alt="${character.name}" class="character-image">
+            <img src="${character.image}" alt="${character.name}" class="character-image" loading="lazy">
             <div class="character-info">
                 <h3 class="character-name">${character.name}</h3>
                 <div class="character-details">
@@ -202,11 +223,11 @@ class RickAndMortyAPI {
                     </div>
                     <div class="detail-item">
                         <i class="fas fa-globe"></i>
-                        <span>${character.origin.name}</span>
+                        <span>${this.truncateText(character.origin.name, 20)}</span>
                     </div>
                     <div class="detail-item">
                         <i class="fas fa-map-marker-alt"></i>
-                        <span>${character.location.name}</span>
+                        <span>${this.truncateText(character.location.name, 20)}</span>
                     </div>
                 </div>
             </div>
@@ -225,7 +246,7 @@ class RickAndMortyAPI {
         
         this.elements.modalBody.innerHTML = `
             <div class="modal-character">
-                <img src="${character.image}" alt="${character.name}">
+                <img src="${character.image}" alt="${character.name}" loading="lazy">
                 <h3>${character.name}</h3>
                 <div class="modal-details">
                     <div class="detail-item">
@@ -292,28 +313,22 @@ class RickAndMortyAPI {
         this.fetchCharacters(this.currentPage);
     }
 
-    // changePage
-    async changePage(page) {
+    // changePage CORRIGIDO
+    changePage(page) {
         if (page < 1 || page > this.totalPages) return;
         
-        // Salva a posição atual de rolagem
-        const scrollPosition = window.scrollY;
-        const charactersSection = document.querySelector('.characters-section');
-        
-        // Chama fetchCharacters e espera completar
-        await this.fetchCharacters(page);
-        
-        // Restaura a posição de rolagem após carregar
-        setTimeout(() => {
-            if (charactersSection) {
-                charactersSection.scrollIntoView({ 
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            } else {
-                window.scrollTo(0, scrollPosition);
-            }
-        }, 100);
+        this.fetchCharacters(page).then(() => {
+            // Rolagem suave após carregar
+            setTimeout(() => {
+                const charactersSection = document.querySelector('.characters-section');
+                if (charactersSection) {
+                    charactersSection.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }, 100);
+        });
     }
 
     updatePagination() {
@@ -331,8 +346,8 @@ class RickAndMortyAPI {
         }
     }
 
-    updateStatistics(characters = null) {
-        if (!characters || !this.elements.stats.total) return;
+    updateStatistics(characters = []) {
+        if (!this.elements.stats.total) return;
         
         const stats = {
             total: characters.length,
@@ -352,10 +367,10 @@ class RickAndMortyAPI {
             this.elements.loadingElement.style.display = 'flex';
         }
         if (this.elements.charactersContainer) {
-            this.elements.charactersContainer.style.display = 'none';
+            this.elements.charactersContainer.style.opacity = '0.5';
         }
         if (this.elements.paginationElement) {
-            this.elements.paginationElement.style.display = 'none';
+            this.elements.paginationElement.style.opacity = '0.5';
         }
     }
 
@@ -364,10 +379,10 @@ class RickAndMortyAPI {
             this.elements.loadingElement.style.display = 'none';
         }
         if (this.elements.charactersContainer) {
-            this.elements.charactersContainer.style.display = 'grid';
+            this.elements.charactersContainer.style.opacity = '1';
         }
-        if (this.elements.paginationElement && this.totalPages > 1) {
-            this.elements.paginationElement.style.display = 'flex';
+        if (this.elements.paginationElement) {
+            this.elements.paginationElement.style.opacity = '1';
         }
     }
 
@@ -377,13 +392,24 @@ class RickAndMortyAPI {
         this.elements.charactersContainer.innerHTML = `
             <div class="error-message" style="grid-column: 1/-1; text-align: center; padding: 2rem;">
                 <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--danger-color); margin-bottom: 1rem;"></i>
-                <p style="font-size: 1.2rem;">${message}</p>
+                <h3 style="color: var(--danger-color); margin-bottom: 1rem;">Erro</h3>
+                <p style="font-size: 1.1rem;">${message}</p>
+                <button onclick="rickAndMortyApp.fetchCharacters(1)" style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--primary-color); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                    Tentar Novamente
+                </button>
             </div>
         `;
     }
 
     capitalizeFirst(string) {
+        if (!string) return '';
         return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    truncateText(text, maxLength) {
+        if (!text) return 'Unknown';
+        if (text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + '...';
     }
 
     debounce(func, wait) {
@@ -392,8 +418,16 @@ class RickAndMortyAPI {
     }
 }
 
-// Inicialização segura
-window.addEventListener('load', () => {
-    console.log('🚀 Iniciando Rick and Morty API...');
-    new RickAndMortyAPI();
+// Inicialização global segura
+let rickAndMortyApp;
+
+window.addEventListener('DOMContentLoaded', () => {
+    console.log('🎬 DOM Carregado - Iniciando aplicação...');
+    rickAndMortyApp = new RickAndMortyAPI();
 });
+
+// Fallback para garantir inicialização
+if (document.readyState === 'interactive' || document.readyState === 'complete') {
+    console.log('🎬 DOM Pronto - Iniciando aplicação...');
+    rickAndMortyApp = new RickAndMortyAPI();
+}
